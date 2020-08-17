@@ -1,0 +1,36 @@
+body {
+  background: #17181c;
+}
+.cards {
+  max-width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+.card {
+  position: relative;
+  width: 105px;
+  height: 150px;
+  margin: 3px;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+}
+img {
+  width: 105px;
+}
+.flip .front {
+  z-index: 99;
+  transition: 0.6s;
+}
+.back,
+.front {
+  position: absolute;
+  transition: 0.6s;
+  z-index: 1;
+}
+.front {
+  transform: rotateY(180deg);
+}
+.flip {
+  transform: rotateY(180deg);
+}
