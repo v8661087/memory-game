@@ -3,11 +3,13 @@ let lockBoard = false;
 let firstCard = null;
 let secondCard = null;
 let card = document.getElementsByClassName("card");
-let max = 12; //卡片組數
+let max = 8; //卡牌組數
 let cards = document.getElementById("cards");
-
-//動態載入卡片
-function initialCards() {
+let count = 0; //次數
+let clear = 0; //完成組數
+let best = 999; //最佳次數
+//創造卡牌
+function createCards() {
   for (let i = 1; i <= max; i++) {
     let div = document.createElement("DIV");
     div.className = "card";
@@ -28,8 +30,17 @@ function initialCards() {
     cards.appendChild(div);
   }
 }
+
+//動態載入卡牌
+function initialCards() {
+  createCards();
+  createCards();
+  for (let i = 0; i < card.length; i++) {
+    card[i].addEventListener("click", flipCard);
+  }
+  randomCards(max);
+}
 initialCards();
-initialCards(); //要兩張執行兩次
 
 //亂序
 function randomCards(max) {
@@ -38,8 +49,7 @@ function randomCards(max) {
     card[i].style.order = randomPos;
   }
 }
-randomCards(max);
-
+//翻牌
 function flipCard() {
   // 避免翻完前點擊
   if (lockBoard) return;
@@ -61,12 +71,24 @@ function flipCard() {
 function checkMatch() {
   let isMatch = firstCard.dataset.keyNumber === secondCard.dataset.keyNumber;
   isMatch ? disableCards() : unflipedCards();
+  count++;
+  document.getElementById("count").innerText = count;
 }
 //釋放記憶體
 function disableCards() {
   firstCard.removeEventListener("click", flipCard);
   secondCard.removeEventListener("click", flipCard);
   resetBoard();
+  clear++;
+  //完成組數等於卡牌組數
+  if (clear === max) {
+    setTimeout(() => {
+      if (count <= best) {
+        best = count;
+        document.getElementById("best").innerText = `最佳紀錄為${count}次`;
+      }
+    }, 300);
+  }
 }
 //配對錯誤翻回背面
 function unflipedCards() {
@@ -83,6 +105,15 @@ function resetBoard() {
   [firstCard, secondCard] = [null, null];
 }
 
-for (let i = 0; i < card.length; i++) {
-  card[i].addEventListener("click", flipCard);
+document.getElementById("restart").addEventListener("click", restartGame);
+//重新
+function restartGame() {
+  count = 0;
+  document.getElementById("count").innerText = count;
+  clear = 0;
+  for (let i = 0; i < card.length; i++) {
+    card[i].classList.remove("flip");
+    card[i].addEventListener("click", flipCard);
+  }
+  randomCards(max);
 }

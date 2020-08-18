@@ -3,6 +3,12 @@ body {
   background: #17181c;
   margin: 0 auto;
   padding: 6px;
+  color: #999;
+}
+.restart {
+  outline: none;
+  border: 0;
+  cursor: pointer;
 }
 .cards {
   display: flex;
